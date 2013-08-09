@@ -10,6 +10,19 @@ window.stage = stage = new S3age "#container",
 window.earth = earth = new Earth()
 stage.scene.add earth
 
+Number::clamp = Number::clamp || (a, b)-> Math.min(b, Math.max(@, a))
+stage.controls =
+	update: do ->
+		zoom = 0
+		console.log zoom
+		document.addEventListener "mousewheel", (e)->
+			zoom -= (e.wheelDeltaY / 1000)
+			zoom = zoom.clamp -6, 6
+		->
+			f = 1 / (1 + Math.exp(-zoom))
+			f = (f * 35) + 35
+			stage.camera.fov = f
+
 gui.add earth.speed, "rotation", 0, 0.005
 gui.add earth, "Quake"
 gui.add earth, "Wave"
