@@ -1,0 +1,3 @@
+# equake
+
+Visualize earthquake data.
