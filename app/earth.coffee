@@ -21,14 +21,17 @@ Earth::update = ->
 toRad = (deg)-> deg * Math.PI / 180
 
 Earth::quake = do ->
-	map = THREE.ImageUtils.loadTexture "app/textures/quake-dot.png"
-	sphere = new THREE.SphereGeometry 50.1, 64, 32
+	deg = Math.PI / 180
+	s1 = 179 * deg
+	s2 = 89 * deg
+	sphere = new THREE.SphereGeometry 50.001, 4, 4, s1, deg, s2, deg
+	dot = new THREE.MeshBasicMaterial { transparent: true, wireframe: true, color: 0xff0000 }
+	correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
 	(lat, lon)->
-		lon -= 90
-		dot = new THREE.MeshBasicMaterial { map, transparent: true }
+		[lat, lon] = correct(lat, lon)
 		display = new THREE.Mesh sphere, dot
-		display.rotation.set toRad(lat), toRad(lon), 0
+		display.rotation.set lat, lon, 0
 		@add display
 
 Earth::Quake = ->
-	@quake 20, 20
+	@quake (Math.random() * 180 - 90), (Math.random() * 360 - 180)
