@@ -30,5 +30,11 @@ Earth::quake = do ->
 		display.rotation.set toRad(lat), toRad(lon), 0
 		@add display
 
+Earth::wave = do ->
+	circleGeometry = new THREE.CircleGeometry 100, 40
+	material = new THREE.LineBasicMaterial { color: 0xff00ff, opacity: 0.5, lineWidth: 2 }
+	(lat, lon) ->
+		
+
 Earth::Quake = ->
 	@quake 20, 20

@@ -9,3 +9,4 @@ stage.scene.add earth
 
 gui.add earth.speed, "rotation", 0.0005, 0.005
 gui.add earth, "Quake"
+gui.add earth, "wave"
