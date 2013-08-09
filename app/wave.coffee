@@ -6,17 +6,16 @@ lerp = (v, a, b, x, y) ->
         
 
 circleGeo = new THREE.CircleGeometry 1, 64
-material = new THREE.LineBasicMaterial {color: 0xff00ff, opacity: 0.5, lineWidth: 2}
+material = new THREE.LineBasicMaterial {color: 0xff00ff, opacity: 0.5, linewidth: 12}
 
 window.Wave = Wave = (lat, lon)->
     THREE.Object3D.call @, [].slice.call arguments, 2
     @rotation.set lat, lon, 0
 
     display = new THREE.Line circleGeo, material
-    display.position.y = 0
-    display.rotation.x = Math.PI / 2
+    display.position.x = 0
+    display.rotation.y = Math.PI / 2
     @add display
-
 
     Object.defineProperty @, 'travel', do ->
         _travel = 0
@@ -24,10 +23,11 @@ window.Wave = Wave = (lat, lon)->
             _travel
         set: (val)->
             # Watcher
-            display.position.y = val
+            display.scale.y = display.scale.x = Math.sin val
+            display.position.x = Math.cos val
             _travel = val
 
-    gui.add @, "travel", -1, 1
+    gui.add @, "travel", 0, Math.PI
 
     @
 
