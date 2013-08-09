@@ -12,6 +12,7 @@ window.Earth = Earth = ->
 		rotation: 0.001
 
 	@add surface
+	@
 
 Earth:: = Object.create THREE.Object3D::
 
@@ -19,6 +20,7 @@ Earth::update = ->
 	@rotation.y -= @speed.rotation
 
 toRad = (deg)-> deg * Math.PI / 180
+Earth::correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
 
 Earth::quake = do ->
 	deg = Math.PI / 180
@@ -26,18 +28,21 @@ Earth::quake = do ->
 	s2 = 89 * deg
 	sphere = new THREE.SphereGeometry 50.001, 4, 4, s1, deg, s2, deg
 	dot = new THREE.MeshBasicMaterial { transparent: true, wireframe: true, color: 0xff0000 }
-	correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
 	(lat, lon)->
-		[lat, lon] = correct(lat, lon)
+		[lat, lon] = @correct(lat, lon)
 		display = new THREE.Mesh sphere, dot
 		display.rotation.set lat, lon, 0
+		display.position.set 
 		@add display
 
-Earth::wave = do ->
-	circleGeometry = new THREE.CircleGeometry 100, 40
-	material = new THREE.LineBasicMaterial { color: 0xff00ff, opacity: 0.5, lineWidth: 2 }
-	(lat, lon) ->
-		
+Earth::wave = (lat, lon)->
+	[lat, lon] = @correct lat, lon
+	w = new Wave lat, lon
+	@add w
+
 
 Earth::Quake = ->
 	@quake (Math.random() * 180 - 90), (Math.random() * 360 - 180)
+
+Earth::Wave = ->
+	@wave 20, 20
