@@ -23,9 +23,9 @@ Earth::update = (clock)->
 toRad = (deg)-> deg * Math.PI / 180
 Earth::correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
 
-Earth::quake = (lat, lon, mag)->
-	[lat, lon] = @correct(lat, lon)
-	@add new QuakeMarker lat, lon, mag
+Earth::quake = (quake)->
+	[lat, lon] = @correct(quake.lat, quake.lon)
+	@add new QuakeMarker lat, lon, quake.mag
 	@
 
 Earth::wave = (lat, lon)->
