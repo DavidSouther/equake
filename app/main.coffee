@@ -4,6 +4,7 @@ window.stage = stage = new S3age "#container",
 	debug:
 		showstats: true
 	camera:
+        near: 0.01
 		position: [0, 0, 2]
 	scene:
 		lights: [ new THREE.AmbientLight 0xdddddd ]
