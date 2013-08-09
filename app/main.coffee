@@ -29,3 +29,5 @@ stage.controls = do ->
 gui.add earth.speed, "rotation", 0, 0.005
 gui.add earth, "Quake"
 gui.add earth, "Wave"
+
+earth.Quake() for i in [0..20]
