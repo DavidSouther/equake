@@ -25,20 +25,5 @@ Earth::correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
 
 Earth::quake = (quake)->
 	[lat, lon] = @correct(quake.lat, quake.lon)
-	@add new QuakeMarker lat, lon, quake.mag
-	@add new Wave lat, lon, quake.mag
-	@
-
-Earth::wave = (lat, lon)->
-	[lat, lon] = @correct lat, lon
-	w = new Wave lat, lon
-	@add w
-	@
-
-Earth::Quake = ->
-	@quake (Math.random() * 180 - 90), (Math.random() * 360 - 180), (Math.random() * 10)
-	@
-
-Earth::Wave = ->
-	@wave 20, 20
+	@add new Quake lat, lon, quake.mag
 	@
