@@ -1,7 +1,7 @@
 window.Earth = Earth = ->
 	THREE.Object3D.call @, [].slice.call arguments, 0
 	
-	sphere = new THREE.SphereGeometry 50, 64, 32
+	sphere = new THREE.SphereGeometry 1, 64, 32
 	map = THREE.ImageUtils.loadTexture "app/textures/earth_day_4096.jpg"
 	# map.anisotropy = stage.renderer.getMaxAnisotropy();
 	ground = new THREE.MeshBasicMaterial { map }
@@ -24,17 +24,9 @@ toRad = (deg)-> deg * Math.PI / 180
 Earth::correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
 
 Earth::quake = do ->
-	deg = Math.PI / 180
-	s1 = 179 * deg
-	s2 = 89 * deg
-	sphere = new THREE.SphereGeometry 50.001, 4, 4, s1, deg, s2, deg
-	dot = new THREE.MeshBasicMaterial { transparent: true, wireframe: true, color: 0xff0000 }
 	(lat, lon)->
 		[lat, lon] = @correct(lat, lon)
-		display = new THREE.Mesh sphere, dot
-		display.rotation.set lat, lon, 0
-		display.position.set 
-		@add display
+		@add new QuakeMarker lat, lon
 		@
 
 Earth::wave = (lat, lon)->
@@ -44,7 +36,8 @@ Earth::wave = (lat, lon)->
 	@
 
 Earth::Quake = ->
-	@quake (Math.random() * 180 - 90), (Math.random() * 360 - 180)
+	# @quake (Math.random() * 180 - 90), (Math.random() * 360 - 180)
+	@quake 20, 20
 	@
 
 Earth::Wave = ->
