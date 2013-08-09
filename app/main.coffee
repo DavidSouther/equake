@@ -3,8 +3,9 @@ window.stage = stage = new S3age "#container",
 	expose: true
 	debug:
 		showstats: true
-	camera: position: [0, 0, 200]
-	scene: 
+	camera:
+		position: [0, 0, 100]
+	scene:
 		lights: [ new THREE.AmbientLight 0xdddddd ]
 		children: [  ]
 window.earth = earth = new Earth()
@@ -14,9 +15,9 @@ Number::clamp = Number::clamp || (a, b)-> Math.min(b, Math.max(@, a))
 stage.controls =
 	update: do ->
 		zoom = 0
-		console.log zoom
+		DAMPING = 250
 		document.addEventListener "mousewheel", (e)->
-			zoom -= (e.wheelDeltaY / 1000)
+			zoom -= (e.wheelDeltaY / DAMPING)
 			zoom = zoom.clamp -6, 6
 		->
 			f = 1 / (1 + Math.exp(-zoom))
