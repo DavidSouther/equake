@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>three.js - examples test runner</title>
+	<script src="bower_components/coffee-script/extras/coffee-script.js"></script>
+	<script src="bower_components/threejs/build/three.js"></script>
+	<script src="bower_components/s3age/lib/s3age.js"></script>
+	<script src="vendor/dat.gui.min.js"></script>
+
+	<link rel="stylesheet" href="app/equake.less" type="text/less" />
+
+	<script type="text/coffeescript" src="app/earth.coffee"></script>
+</head>
+<body>
+	<div id="container"></div>
+
+	<script type="text/coffeescript">
+		gui = new dat.GUI()
+		stage = new S3age "#container",
+			camera: position: [0, 0, 100]
+			scene: 
+				lights: [ new THREE.AmbientLight 0xdddddd ]
+				children: [  ]
+		earth = new Earth()
+		stage.scene.add earth
+
+		gui.add earth.speed, "rotation", 0.0005, 0.005
+	</script>
+</body>
+</html>
