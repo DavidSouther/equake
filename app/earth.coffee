@@ -16,8 +16,9 @@ window.Earth = Earth = ->
 
 Earth:: = Object.create THREE.Object3D::
 
-Earth::update = ->
+Earth::update = (clock)->
 	@rotation.y -= @speed.rotation
+	c.update clock for c in @children
 
 toRad = (deg)-> deg * Math.PI / 180
 Earth::correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
@@ -34,15 +35,18 @@ Earth::quake = do ->
 		display.rotation.set lat, lon, 0
 		display.position.set 
 		@add display
+		@
 
 Earth::wave = (lat, lon)->
 	[lat, lon] = @correct lat, lon
 	w = new Wave lat, lon
 	@add w
-
+	@
 
 Earth::Quake = ->
 	@quake (Math.random() * 180 - 90), (Math.random() * 360 - 180)
+	@
 
 Earth::Wave = ->
 	@wave 20, 20
+	@

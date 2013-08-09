@@ -1,7 +1,8 @@
 gui = new dat.GUI()
 window.stage = stage = new S3age "#container",
-    expose: true
-    debug: true
+	expose: true
+	debug:
+		showstats: true
 	camera: position: [0, 0, 200]
 	scene: 
 		lights: [ new THREE.AmbientLight 0xdddddd ]
