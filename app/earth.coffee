@@ -1,8 +1,8 @@
 window.Earth = Earth = ->
 	THREE.Object3D.call @, [].slice.call arguments, 0
 	
-	sphere = new THREE.SphereGeometry 50, 32, 16
-	map = THREE.ImageUtils.loadTexture "app/textures/earth_day_medium.jpg"
+	sphere = new THREE.SphereGeometry 50, 64, 32
+	map = THREE.ImageUtils.loadTexture "app/textures/earth_day_4096.jpg"
 	# map.anisotropy = stage.renderer.getMaxAnisotropy();
 	ground = new THREE.MeshBasicMaterial { map }
 	surface = new THREE.Mesh sphere, ground

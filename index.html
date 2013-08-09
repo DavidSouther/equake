@@ -2,17 +2,22 @@
 <html>
 <head>
 	<title>three.js - examples test runner</title>
+	<link rel="stylesheet/less" href="app/equake.less" type="text/css" />
+
 	<script src="bower_components/coffee-script/extras/coffee-script.js"></script>
+	<script src="bower_components/less/dist/less-1.4.2.js"></script>
 	<script src="bower_components/threejs/build/three.js"></script>
 	<script src="bower_components/s3age/lib/s3age.js"></script>
 	<script src="vendor/dat.gui.min.js"></script>
-
-	<link rel="stylesheet" href="app/equake.less" type="text/less" />
 
 	<script type="text/coffeescript" src="app/earth.coffee"></script>
 </head>
 <body>
 	<div id="container"></div>
+
+	<div id="info">
+		Earthquake Data Visualization
+	</div>
 
 	<script type="text/coffeescript">
 		gui = new dat.GUI()
