@@ -18,4 +18,17 @@ Earth:: = Object.create THREE.Object3D::
 Earth::update = ->
 	@rotation.y -= @speed.rotation
 
-Earth::quake = (lat, lon)->
+toRad = (deg)-> deg * Math.PI / 180
+
+Earth::quake = do ->
+	map = THREE.ImageUtils.loadTexture "app/textures/quake-dot.png"
+	sphere = new THREE.SphereGeometry 50.1, 64, 32
+	(lat, lon)->
+		lon -= 90
+		dot = new THREE.MeshBasicMaterial { map, transparent: true }
+		display = new THREE.Mesh sphere, dot
+		display.rotation.set toRad(lat), toRad(lon), 0
+		@add display
+
+Earth::Quake = ->
+	@quake 20, 20
