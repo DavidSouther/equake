@@ -18,7 +18,7 @@ Earth:: = Object.create THREE.Object3D::
 
 Earth::update = (clock)->
 	@rotation.y -= @speed.rotation
-	c.update clock for c in @children
+	c.update? clock for c in @children
 
 toRad = (deg)-> deg * Math.PI / 180
 Earth::correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
@@ -26,6 +26,7 @@ Earth::correct = (lat, lon)-> [toRad(-lat), toRad(lon - 90)]
 Earth::quake = (quake)->
 	[lat, lon] = @correct(quake.lat, quake.lon)
 	@add new QuakeMarker lat, lon, quake.mag
+	@add new Wave lat, lon, quake.mag
 	@
 
 Earth::wave = (lat, lon)->

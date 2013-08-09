@@ -9,6 +9,7 @@ window.stage = stage = new S3age "#container",
 	scene:
 		lights: [ new THREE.AmbientLight 0xdddddd ]
 		children: [  ]
+		fog: new THREE.Fog 0x333333, 1
 camera.position.z = 2
 window.earth = earth = new Earth()
 stage.scene.add earth
@@ -32,4 +33,4 @@ gui.add camera.position, "z", 0, 5
 gui.add earth, "Quake"
 gui.add earth, "Wave"
 
-earth.Quake() for i in [0..20]
+earth.quake quake for id, quake of quakes
