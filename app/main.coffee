@@ -1,4 +1,4 @@
-gui = new dat.GUI()
+window.gui = new dat.GUI()
 window.stage = stage = new S3age "#container",
 	expose: true
 	debug:
