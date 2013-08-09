@@ -7,6 +7,6 @@ window.stage = stage = new S3age "#container",
 window.earth = earth = new Earth()
 stage.scene.add earth
 
-gui.add earth.speed, "rotation", 0.0005, 0.005
+gui.add earth.speed, "rotation", 0, 0.005
 gui.add earth, "Quake"
 gui.add earth, "wave"
