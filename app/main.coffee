@@ -4,6 +4,7 @@ window.stage = stage = new S3age "#container",
 	debug:
 		showstats: true
 	camera:
+		near: 0.01
 		position: [0, 0, 2]
 	scene:
 		lights: [ new THREE.AmbientLight 0xdddddd ]
@@ -28,3 +29,5 @@ stage.controls = do ->
 gui.add earth.speed, "rotation", 0, 0.005
 gui.add earth, "Quake"
 gui.add earth, "Wave"
+
+earth.Quake() for i in [0..20]
