@@ -18,7 +18,7 @@ Number::clamp = Number::clamp || (a, b)-> Math.min(b, Math.max(@, a))
 stage.controls = do ->
 	zoom = 0
 	DAMPING = 250
-	document.addEventListener "mousewheel", (e)->
+	stage.renderer.domElement.addEventListener "mousewheel", (e)->
 		zoom -= (e.wheelDeltaY / DAMPING)
 		zoom = zoom.clamp -6, 6
 	update: ->
@@ -30,7 +30,6 @@ stage.controls = do ->
 
 gui.add earth.speed, "rotation", 0, 0.005
 gui.add camera.position, "z", 0, 5
-gui.add earth, "Quake"
-gui.add earth, "Wave"
 
-earth.quake quake for id, quake of quakes
+for id, quake of quakes
+	earth.quake quake
