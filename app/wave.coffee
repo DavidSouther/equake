@@ -3,7 +3,7 @@ material = new THREE.MeshBasicMaterial {color: 0xff00ff, opacity: 0.5, lineWidth
 
 window.Wave = Wave = (lat, lon)->
     THREE.Object3D.call @, [].slice.call arguments, 2
-    @rotation.set lat, lon
+    @rotation.set lat, lon, 0
 
     display = new THREE.Mesh circleGeo, material
     display.position.y = 60
