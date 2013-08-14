@@ -1,6 +1,3 @@
-deg = Math.PI / 180
-s1 = 179 * deg
-s2 = 89 * deg
 dot = new THREE.LineBasicMaterial { color: 0xff0000, lineWidth: 2 }
 
 heights = [0, 1, -0.75, 5, -1, 1.5, -0.75, 0.3, 0]
@@ -23,7 +20,6 @@ window.Quake = (lat, lon, mag = 5)->
 	marker.scale.x = 0.005
 	marker.scale.y = 0.001 * mag
 	center.add marker
-	center.add new THREE.AxisHelper .1
 
 	material = new THREE.LineBasicMaterial {color: 0xff00ff, opacity: 0.5}
 	wave = new THREE.Line circleGeo, material
@@ -38,7 +34,6 @@ window.Quake = (lat, lon, mag = 5)->
 			val = if val is 0 then 0.001 else val
 			wave.scale.y = wave.scale.x = Math.sin val
 			wave.position.z = Math.cos(val) - 1
-
 			_travel = val
 
 	@travel = 0

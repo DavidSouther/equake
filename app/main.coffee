@@ -1,4 +1,3 @@
-window.gui = new dat.GUI()
 window.stage = stage = new S3age "#container",
 	expose: true
 	debug:
@@ -46,8 +45,6 @@ stage.controls = do ->
 		camera.position.fromSpherical theta, phi, r.position
 		camera.position.add stage.controls.target
 		camera.lookAt stage.controls.target
-
-gui.add earth.speed, "rotation", 0, 0.005
 
 for id, quake of quakes
 	earth.quake quake

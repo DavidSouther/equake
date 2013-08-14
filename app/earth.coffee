@@ -18,7 +18,7 @@ window.Earth = Earth = ->
 Earth:: = Object.create THREE.Object3D::
 
 Earth::update = (clock)->
-	# @tilted.rotation.y += @speed.rotation
+	@tilted.rotation.y += @speed.rotation
 	q.update? clock for q in @quakes.children
 
 Earth::correct = (lat, lon)->
