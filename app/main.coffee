@@ -1,5 +1,5 @@
 earth = new Earth()
-earth.quake quake for id, quake of quakes
+earth.addMarker new Quake id, quake for id, quake of quakes
 
 window.stage = new S3age "#container",
 	expose: true
