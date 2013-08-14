@@ -4,32 +4,51 @@ window.stage = stage = new S3age "#container",
 	debug:
 		showstats: true
 	camera:
-        near: 0.01
-		position: [0, 0, 2]
+		near: 0.01
+		position: [0, 0, 4]
 	scene:
 		lights: [ new THREE.AmbientLight 0xdddddd ]
-		children: [  ]
-		fog: new THREE.Fog 0x333333, 1
-camera.position.z = 2
+		fog: new THREE.Fog 0x333333, 0.1
 window.earth = earth = new Earth()
 stage.scene.add earth
 
-Number::clamp = Number::clamp || (a, b)-> Math.min(b, Math.max(@, a))
 stage.controls = do ->
-	zoom = 0
-	DAMPING = 250
+	ZERO = new THREE.Vector3 0, 0, 0
+	DAMPING = 
+		ZOOM:
+			FOV: 250
+			TRUCK: 7500
+		SPIN:
+			UP: 2500
+			LEFT: 15000
+
+	zoom = new BoundDamper 35, 70
+	r = new BoundDamper 2, 7.5
+	r.position = 3
+	spin =
+		up: new BoundDamper -6, 6
+		left: new Damper()
+
 	stage.renderer.domElement.addEventListener "mousewheel", (e)->
-		zoom -= (e.wheelDeltaY / DAMPING)
-		zoom = zoom.clamp -6, 6
+		if e.altKey is true
+			spin.up.push -e.wheelDeltaY / DAMPING.SPIN.UP
+			zoom.push e.wheelDeltaX / DAMPING.ZOOM.FOV
+		else
+			r.push -e.wheelDeltaY / DAMPING.ZOOM.TRUCK
+			spin.left.push -e.wheelDeltaX / DAMPING.SPIN.LEFT
+
 	update: ->
-		# Sigmoid
-		f = 1 / (1 + Math.exp(-zoom))
-		# f = (zoom + 6) / 12
-		f = (f * 35) + 35
-		stage.camera.fov = f
+		d.step() for d in [spin.left, spin.up, r, zoom]
+		stage.camera.fov = zoom.position
+		phi = Math.sigmoid(spin.up.position) * Math.PI
+		theta = spin.left.position * Math.PI
+		camera.position.fromSpherical theta, phi, r.position
+		camera.lookAt ZERO
+
+# stage.controls.update = ->
+
 
 gui.add earth.speed, "rotation", 0, 0.005
-gui.add camera.position, "z", 0, 5
 
 for id, quake of quakes
 	earth.quake quake

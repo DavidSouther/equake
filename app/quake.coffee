@@ -17,7 +17,9 @@ circleGeo = new THREE.CircleGeometry 1, 128
 
 window.Quake = (lat, lon, mag = 5)->
 	THREE.Object3D.call @, [].slice.call arguments, 0
-	@rotation.set lat, lon, 0
+	console.log lon
+	@rotation.set lon, 0, 0
+	@rotation.eulerOrder = "YXZ"
 
 	center = new THREE.Object3D()
 	center.position.x = -1.001
