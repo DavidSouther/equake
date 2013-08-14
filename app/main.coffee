@@ -26,27 +26,26 @@ stage.controls = do ->
 	r = new BoundDamper 2, 7.5
 	r.position = 3
 	spin =
-		up: new BoundDamper -6, 6
+		up: new SigmoidDamper()
 		left: new Damper()
 
 	stage.renderer.domElement.addEventListener "mousewheel", (e)->
 		if e.altKey is true
-			spin.up.push -e.wheelDeltaY / DAMPING.SPIN.UP
 			zoom.push e.wheelDeltaX / DAMPING.ZOOM.FOV
-		else
 			r.push -e.wheelDeltaY / DAMPING.ZOOM.TRUCK
-			spin.left.push -e.wheelDeltaX / DAMPING.SPIN.LEFT
+		else
+			spin.up.push -e.wheelDeltaY / DAMPING.SPIN.UP
+			spin.left.push e.wheelDeltaX / DAMPING.SPIN.LEFT
 
+	target: ZERO
 	update: ->
 		d.step() for d in [spin.left, spin.up, r, zoom]
 		stage.camera.fov = zoom.position
-		phi = Math.sigmoid(spin.up.position) * Math.PI
+		phi = spin.up.position * Math.PI
 		theta = spin.left.position * Math.PI
 		camera.position.fromSpherical theta, phi, r.position
-		camera.lookAt ZERO
-
-# stage.controls.update = ->
-
+		camera.position.add stage.controls.target
+		camera.lookAt stage.controls.target
 
 gui.add earth.speed, "rotation", 0, 0.005
 

@@ -37,5 +37,25 @@ BoundDamper::push = (acceleration)->
 	@velocity = @velocity.clamp -@friction * @delta, @friction * @delta
 	@
 
+window.SigmoidDamper = (@friction = 0.1)->
+	@point = 0
+	BoundDamper.call @, -6, 6
+	Object.defineProperty @, 'position',
+		set: (val)-> @point = val
+		get: -> Math.sigmoid @point
+	@
+
+SigmoidDamper:: = Object.create BoundDamper::
+SigmoidDamper::step = ->
+	@point += @velocity
+	@point = @point.clamp @min, @max
+	@velocity *= 1 - @friction
+	@velocity = @velocity.clamp -@friction * @delta, @friction * @delta
+	@
+
 Number::clamp = Number::clamp || (a, b)-> Math.min(b, Math.max(@, a))
 Math.sigmoid = Math.sigmoid || (x)-> 1 / (1 + Math.exp(-x))
+Math.lerp = (v, a, b, x, y) ->
+	if v is a then x
+	else (v - a) * (y - x) / (b - a) + x
+Math.toRad = (deg)-> deg * Math.PI / 180
