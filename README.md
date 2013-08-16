@@ -12,20 +12,20 @@ The Earth extends a globe class, provided by S3age. It adds a sphere surface tex
 
 The rendering is handled by S3age - the equake app only handles creating the 3d geometry and materials of the markers. S3age also provides the controls for the scene.
 
-## Code
+### Code
 
-### `[index.html](index.html)`
+**[index](index.html)**
 
 Loads libraries, scripts. Provides instruction and hook for S3age.
 
-### `[app/main.coffee](app/main.coffee)`
+**[app/main](app/main.coffee)**
 
 Creates Earth, adds quake markers, instantiates s3age.
 
-### `[app/earth.coffee](app/earth.coffee)`
+**[app/earth](app/earth.coffee)**
 
 Extends Globe, adds texture.
 
-### `[app/quake.coffee](app/quake.coffee)`, `[app/pin.coffee](app/pin.coffee)`
+**[app/quake](app/quake.coffee), [app/pin](app/pin.coffee)**
 
 Two different quake marker styles.
