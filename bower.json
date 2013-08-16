@@ -10,7 +10,7 @@
   ],
   "dependencies": {
     "coffee-script": "git://github.com/jashkenas/coffee-script.git#~1.6.3",
-    "s3age": "git://github.com/DavidSouther/s3age.git#1.0.0",
+    "s3age": "git://github.com/DavidSouther/s3age.git#1.0.1",
     "threejs": "git://github.com/mrdoob/three.js.git",
     "less": "~1.4.2"
   }
