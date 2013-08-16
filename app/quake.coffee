@@ -1,41 +1,78 @@
-dot = new THREE.LineBasicMaterial { color: 0xff0000, lineWidth: 2 }
+###
+# Quake Marker
 
+Marker to show the magnitude and speed of the quake.
+The heights array is a list of numbers for the "canonical"
+seismograph icon. It will be scaled to correspond to magnitude.
+###
 heights = [0, 1, -0.75, 5, -1, 1.5, -0.75, 0.3, 0]
 
+###
+To improve memory performance, we only create on instance
+of the geometry and color.
+###
 markerGeo = new THREE.Geometry()
-markerGeo.vertices = (new THREE.Vector3 i, y for y, i in heights)
+markerGeo.vertices = (new THREE.Vector3 x, y, 0 for y, x in heights)
+dot = new THREE.LineBasicMaterial { color: 0xff0000, lineWidth: 2 }
 circleGeo = new THREE.CircleGeometry 1, 128
 
-window.Quake = (id, quake)->
-	THREE.Object3D.apply @, [].slice.call arguments, 2
-	@id = "quake_#{id}"
+class window.Quake extends THREE.Object3D
+	constructor: (id, quake)->
+		THREE.Object3D.call @
 
-	@lat = quake.lat
-	@lon = quake.lon
-	@mag = quake.mag
+		@id = "quake_#{id}"
 
-	marker = new THREE.Line markerGeo, dot
-	marker.scale.x = 0.005
-	marker.scale.y = 0.001 * @mag
-	@add marker
+		@lat = quake.lat
+		@lon = quake.lon
+		@mag = quake.mag
 
-	material = new THREE.LineBasicMaterial {color: 0xff00ff, opacity: 0.5}
-	wave = new THREE.Line circleGeo, material
-	@add wave
+		###
+		Each class gets its own marker, an instance of `THREE.Line`.
+		All the lines share the geometry and 
+		###
+		marker = new THREE.Line markerGeo, dot
+		marker.scale.x = 0.005
+		marker.scale.y = 0.001 * @mag
+		@add marker
 
-	Object.defineProperty @, 'travel', do =>
-		_travel = 0
-		get: ->
-			_travel
-		set: (val)=>
-			val = val % (0.1 * @mag)
-			val = if val is 0 then 0.001 else val
-			wave.scale.y = wave.scale.x = Math.sin val
-			wave.position.z = Math.cos(val) - 1
-			_travel = val
-	@travel = 0
-	@
+		###
+		The wave is simply a circle.
+		The color for the wave on the surface of the earth is tied
+		to the magnitude of the earthquake - darker purple is weaker quake.
+		###
+		color = new THREE.Color 0x000000
+		color.setHSL 0.8, 1, Math.lerp @mag, 0, 10, 0, 1
+		material = new THREE.LineBasicMaterial { color }
+		wave = new THREE.Line circleGeo, material
+		@add wave
 
-Quake:: = Object.create THREE.Object3D::
-Quake::update = (clock)->
-	@travel = (@travel + 0.001) % Math.PI
+		###
+		Changing the `travel` property on the marker has side effects.
+		The anonymous function binds to the ctor instance, and wraps a
+		private local variable.
+		###
+		Object.defineProperty @, 'travel', do =>
+			_travel = 0
+			get: ->
+				_travel
+			set: (val)=>
+				# Contrain value between 0 and one-tenth the magnitude.
+				val = val % (0.1 * @mag)
+				# Quick check to prevent val from being zero, or bad
+				# divisions occur.
+				val = if val is 0 then 0.0001 else val
+
+				# The XY-plane size of the circle scales along the
+				# radius of the chord through the sphere at some distance
+				# from the sphere center.
+				wave.scale.y = wave.scale.x = Math.sin val
+				# The wave center moves along the Z axis
+				# (towards the center of the Earth)
+				wave.position.z = Math.cos(val) - 1
+				# Store the underlying value.
+				_travel = val
+		@travel = 0
+		@
+
+	update: (clock)->
+		@travel += 0.001

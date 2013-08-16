@@ -4,24 +4,30 @@
 	<title>3Quake!</title>
 	<link rel="stylesheet/less" href="app/equake.less" type="text/css" />
 
-	<script src="app/tres_quakes.js"></script>
+	<!-- Three quakes, for testing. Two in California, one in Alaska. -->
+	<!-- <script src="app/data/tres_quakes.js"></script> -->
+	<script src="app/data/today_quakes.js"></script>
 
+	<!-- Various components, loaded through Bower. Coffeescript & Less are compiled on the fly.-->
 	<script src="bower_components/coffee-script/extras/coffee-script.js"></script>
 	<script src="bower_components/less/dist/less-1.4.2.js"></script>
 	<script src="bower_components/threejs/build/three.js"></script>
 	<script src="bower_components/s3age/lib/s3age.js"></script>
 	<script src="bower_components/s3age/lib/s3age.controls.js"></script>
 	<script src="bower_components/s3age/lib/s3age.extras.js"></script>
+	<!-- Dat-gui, for playing with parameters during scenario creation. -->
 	<script src="vendor/dat.gui.min.js"></script>
 
-	<script type="text/coffeescript" src="app/math.coffee"></script>
+	<!-- Content scripts. -->
 	<script type="text/coffeescript" src="app/earth.coffee"></script>
 	<script type="text/coffeescript" src="app/quake.coffee"></script>
+	<script type="text/coffeescript" src="app/pin.coffee"></script>
 </head>
 <body>
 	<div id="container"></div>
 	<div id="info">Earthquake Data Visualization<br />Two-finger scroll to move. Alt+Scroll to zoom.</div>
 
+	<!-- Load the main script after the approparite DOM nodes have been loaded. -->
 	<script type="text/coffeescript" src="app/main.coffee"></script>
 </body>
 </html>

@@ -1,15 +1,17 @@
+###
+Build a new Earth object. Add each of the quakes with each type of marker.
+###
 earth = new Earth()
-earth.addMarker new Quake id, quake for id, quake of quakes
+for id, quake of quakes
+	earth.addMarker new Quake id, quake 
+	earth.addMarker new Pin quake.lat, quake.lon, quake.mag
 
-window.stage = new S3age "#container",
-	expose: true
-	debug:
-		showstats: true
-	camera:
-		near: 0.01
-		position: [0, 0, 4]
+###
+A S3age manages a variety of details of the 3D scene. In this case,
+some ambient light, the Earth with Quakes, and a Sphere control.
+###
+new S3age "#container",
 	scene:
 		lights: [ new THREE.AmbientLight 0xdddddd ]
-		fog: new THREE.Fog 0x333333, 0.1
 		children: [ earth ]
 	controls: S3age.Controls.Sphere
