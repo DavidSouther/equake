@@ -15,12 +15,13 @@ markerGeo = new THREE.Geometry()
 markerGeo.vertices = (new THREE.Vector3 x, y, 0 for y, x in heights)
 dot = new THREE.LineBasicMaterial { color: 0xff0000, lineWidth: 2 }
 circleGeo = new THREE.CircleGeometry 1, 128
+circleGeo.vertices.shift()
 
 class window.Quake extends THREE.Object3D
-	constructor: (id, quake)->
+	constructor: (quake)->
 		THREE.Object3D.call @
 
-		@id = "quake_#{id}"
+		@id = "quake_#{quake.id}"
 
 		@lat = quake.lat
 		@lon = quake.lon
@@ -63,7 +64,10 @@ class window.Quake extends THREE.Object3D
 				_travel
 			set: (val)=>
 				# Contrain value between 0 and one-tenth the magnitude.
-				val = val % (0.1 * @mag)
+				if val > 0.1 * @mag
+					@remove wave  if wave
+					return
+
 				# Quick check to prevent val from being zero, or bad
 				# divisions occur.
 				val = if val is 0 then 0.0001 else val
@@ -74,7 +78,7 @@ class window.Quake extends THREE.Object3D
 				wave.scale.y = wave.scale.x = Math.sin val
 				# The wave center moves along the Z axis
 				# (towards the center of the Earth)
-				wave.position.z = Math.cos(val) - 1
+				wave.position.z = (Math.cos(val) - 1)
 				# Store the underlying value.
 				_travel = val
 		@travel = 0

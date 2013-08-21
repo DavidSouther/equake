@@ -9,7 +9,7 @@ points to the north pole, and the X axis is orthagonal, pointing East.
 
 
 (function() {
-  var circleGeo, dot, earth, geo, heights, id, markerGeo, quake, x, y,
+  var animationDelay, animationTime, circleGeo, dot, earth, geo, heights, id, markerGeo, next, oneDayMillis, qs, quake, x, y, _i, _len,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -74,14 +74,16 @@ points to the north pole, and the X axis is orthagonal, pointing East.
 
   circleGeo = new THREE.CircleGeometry(1, 128);
 
+  circleGeo.vertices.shift();
+
   window.Quake = (function(_super) {
     __extends(Quake, _super);
 
-    function Quake(id, quake) {
+    function Quake(quake) {
       var marker, material, wave,
         _this = this;
       THREE.Object3D.call(this);
-      this.id = "quake_" + id;
+      this.id = "quake_" + quake.id;
       this.lat = quake.lat;
       this.lon = quake.lon;
       this.mag = quake.mag;
@@ -129,7 +131,12 @@ points to the north pole, and the X axis is orthagonal, pointing East.
             return _travel;
           },
           set: function(val) {
-            val = val % (0.1 * _this.mag);
+            if (val > 0.1 * _this.mag) {
+              if (wave) {
+                _this.remove(wave);
+              }
+              return;
+            }
             val = val === 0 ? 0.0001 : val;
             wave.scale.y = wave.scale.x = Math.sin(val);
             wave.position.z = Math.cos(val) - 1;
@@ -171,7 +178,7 @@ points to the north pole, and the X axis is orthagonal, pointing East.
   window.Pin = (function(_super) {
     __extends(Pin, _super);
 
-    function Pin(id, quake) {
+    function Pin(quake) {
       var ball, color, height, line, lineMaterial, material, size;
       Quake.apply(this, [].slice.call(arguments, 0));
       /*
@@ -215,8 +222,41 @@ points to the north pole, and the X axis is orthagonal, pointing East.
 
   for (id in quakes) {
     quake = quakes[id];
-    earth.addMarker(new Pin(id, quake));
+    quake.id = id;
   }
+
+  qs = _(quakes).chain().values().sortBy(function(it) {
+    return it.time;
+  }).value();
+
+  for (_i = 0, _len = qs.length; _i < _len; _i++) {
+    quake = qs[_i];
+    quake.date = Date.parse(quake.time);
+  }
+
+  oneDayMillis = 24 * 60 * 60 * 1000;
+
+  animationTime = 60 * 1000;
+
+  animationDelay = animationTime / oneDayMillis;
+
+  next = function(q) {
+    var d1, d2, time;
+    if (q === qs.length) {
+      return;
+    }
+    earth.addMarker(new Pin(qs[q]));
+    if (q < qs.length - 1) {
+      d1 = qs[q + 1].date;
+      d2 = qs[q].date;
+      time = (d1 - d2) * animationDelay;
+    }
+    return setTimeout((function() {
+      return next(q + 1);
+    }), time);
+  };
+
+  next(0);
 
   /*
   A S3age manages a variety of details of the 3D scene. In this case,

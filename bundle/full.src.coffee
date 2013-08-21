@@ -37,12 +37,13 @@ markerGeo = new THREE.Geometry()
 markerGeo.vertices = (new THREE.Vector3 x, y, 0 for y, x in heights)
 dot = new THREE.LineBasicMaterial { color: 0xff0000, lineWidth: 2 }
 circleGeo = new THREE.CircleGeometry 1, 128
+circleGeo.vertices.shift()
 
 class window.Quake extends THREE.Object3D
-	constructor: (id, quake)->
+	constructor: (quake)->
 		THREE.Object3D.call @
 
-		@id = "quake_#{id}"
+		@id = "quake_#{quake.id}"
 
 		@lat = quake.lat
 		@lon = quake.lon
@@ -85,7 +86,10 @@ class window.Quake extends THREE.Object3D
 				_travel
 			set: (val)=>
 				# Contrain value between 0 and one-tenth the magnitude.
-				val = val % (0.1 * @mag)
+				if val > 0.1 * @mag
+					@remove wave  if wave
+					return
+
 				# Quick check to prevent val from being zero, or bad
 				# divisions occur.
 				val = if val is 0 then 0.0001 else val
@@ -96,7 +100,7 @@ class window.Quake extends THREE.Object3D
 				wave.scale.y = wave.scale.x = Math.sin val
 				# The wave center moves along the Z axis
 				# (towards the center of the Earth)
-				wave.position.z = Math.cos(val) - 1
+				wave.position.z = (Math.cos(val) - 1)
 				# Store the underlying value.
 				_travel = val
 		@travel = 0
@@ -120,7 +124,7 @@ geo =
 		g
 
 class window.Pin extends Quake
-	constructor: (id, quake)->
+	constructor: (quake)->
 		Quake.apply @, [].slice.call arguments, 0
 		###
 		Color is some value between black and blue. Bluer is stronger quake.
@@ -148,8 +152,30 @@ class window.Pin extends Quake
 Build a new Earth object. Add each of the quakes with each type of marker.
 ###
 earth = new Earth()
-for id, quake of quakes
-	earth.addMarker new Pin id, quake
+
+# quakes = _(quakes).map (q, id)->
+# 	q.id = id
+# 	q
+
+quake.id = id for id, quake of quakes
+qs = _(quakes).chain().values().sortBy((it)-> it.time).value()
+quake.date = Date.parse quake.time for quake in qs
+
+
+#one day in milliseconds = 
+oneDayMillis = 24 * 60 * 60 * 1000
+animationTime = 60 * 1000
+animationDelay = animationTime / (oneDayMillis)
+
+next = (q)->
+	if q is qs.length then return
+	earth.addMarker new Pin qs[q]
+	if q < qs.length - 1
+		d1 = qs[q + 1].date
+		d2 = qs[q].date
+		time = (d1 - d2) * animationDelay
+	setTimeout (-> next q + 1), time
+next 0
 
 ###
 A S3age manages a variety of details of the 3D scene. In this case,
