@@ -1,33 +1,36 @@
-html {
-    height: 100%;
-}
+
+@import "../../bower_components/bootstrap/less/bootstrap.less";
+
+@top-run: 1.5em;
+@side-run: 2em;
 
 body {
-    color: #ffffff;
-    font-family:Monospace;
-    font-size:13px;
-    text-align:center;
-    font-weight: bold;
-    background-color: #000000;
-    margin: 0px;
-    overflow: hidden;
-    height: 100%;
+	color: #ffffff;
+	font-family:Monospace;
+	font-size:13px;
+	text-align:center;
+	font-weight: bold;
+	background-color: #000000;
+	margin: 0px;
+	overflow: hidden;
+	height: 100%;
 
 	#info {
-	    color: #fff;
-	    position: absolute;
-	    top: 0px;
-	    width: 50%;
-	    margin: 0 auto;
-	    padding: 5px;
-	    z-index:100;
-	    background-color: rgba(120, 120, 120, 0.8);
+		color: #fff;
+		position: absolute;
+		top: @top-run;
+		left: calc(33% + @side-run);
+		width: 50%;
+		margin: 0 auto;
+		padding: 5px;
+		z-index:100;
+		background-color: rgba(120, 120, 120, 0.8);
 	}
 
 	#stats {
-	    position: absolute;
-	    top: 0;
-	    left: 0;
+		position: absolute;
+		top: @top-run;
+		left: calc(33% + @side-run);
 	}
 
 	#container {
@@ -35,5 +38,24 @@ body {
 		height: 828px;
 	    background: url("https://s3.amazonaws.com/equake/milky_way.png");
 	    margin: 1em auto -828px;
+		position: absolute;
+		top: @top-run;
+		bottom: @top-run;
+		left: @side-run;
+		right: @side-run;
+		overflow: hidden;
+		padding: 0;
+	}
+
+	#editor {
+		display: none;
+		
+		position: absolute;
+		top: @top-run;
+		bottom: @top-run;
+		left: @side-run;
+		right: 67%;
+		overflow: auto;
+		margin: 0;
 	}
 }

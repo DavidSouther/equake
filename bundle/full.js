@@ -9,7 +9,7 @@ points to the north pole, and the X axis is orthagonal, pointing East.
 
 
 (function() {
-  var circleGeo, dot, earth, geom, heights, id, markerGeo, quake, x, y,
+  var circleGeo, dot, earth, geo, heights, id, markerGeo, quake, x, y,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -23,14 +23,12 @@ points to the north pole, and the X axis is orthagonal, pointing East.
 
 
     function Earth() {
-      var color, ground, map, sphere, surface;
+      var ground, map, sphere, surface;
       S3age.Extras.Globe.call(this);
       sphere = new THREE.SphereGeometry(this.radius, 64, 32);
       map = THREE.ImageUtils.loadTexture("app/textures/earth_day_4096.jpg");
-      color = 0xFFFFFF;
       ground = new THREE.MeshBasicMaterial({
-        map: map,
-        color: color
+        map: map
       });
       surface = new THREE.Mesh(sphere, ground);
       this.add(surface);
@@ -80,13 +78,23 @@ points to the north pole, and the X axis is orthagonal, pointing East.
     __extends(Quake, _super);
 
     function Quake(id, quake) {
-      var color, marker, material, wave,
+      var marker, material, wave,
         _this = this;
       THREE.Object3D.call(this);
       this.id = "quake_" + id;
       this.lat = quake.lat;
       this.lon = quake.lon;
       this.mag = quake.mag;
+      this.depth = quake.depth;
+      Object.defineProperty(this, 'color', {
+        get: function() {
+          var color, hue;
+          hue = Math.lerp(quake.mag, 0, 9, 0.5, 0);
+          color = new THREE.Color();
+          color.setHSL(hue, 0.5, 0.5);
+          return color;
+        }
+      });
       /*
       		Each class gets its own marker, an instance of `THREE.Line`.
       		All the lines share the geometry and
@@ -102,10 +110,8 @@ points to the north pole, and the X axis is orthagonal, pointing East.
       		to the magnitude of the earthquake - darker purple is weaker quake.
       */
 
-      color = new THREE.Color(0x000000);
-      color.setHSL(0.8, 1, Math.lerp(this.mag, 0, 10, 0, 1));
       material = new THREE.LineBasicMaterial({
-        color: color
+        color: this.color
       });
       wave = new THREE.Line(circleGeo, material);
       this.add(wave);
@@ -151,39 +157,54 @@ points to the north pole, and the X axis is orthagonal, pointing East.
   */
 
 
-  geom = new THREE.SphereGeometry(1, 20, 20);
+  geo = {
+    head: new THREE.CircleGeometry(1, 64),
+    line: (function() {
+      var g;
+      g = new THREE.Geometry();
+      g.vertices.push(new THREE.Vector3());
+      g.vertices.push(new THREE.Vector3(0, 0, 1));
+      return g;
+    })()
+  };
 
   window.Pin = (function(_super) {
     __extends(Pin, _super);
 
-    function Pin(lat, lon, mag) {
-      var ball, color, material, size;
-      this.lat = lat;
-      this.lon = lon;
-      this.mag = mag;
-      Pin.__super__.constructor.call(this);
+    function Pin(id, quake) {
+      var ball, color, height, line, lineMaterial, material, size;
+      Quake.apply(this, [].slice.call(arguments, 0));
       /*
       		Color is some value between black and blue. Bluer is stronger quake.
       */
 
-      color = Math.lerp(this.mag, 0, 10, 0x000000, 0x0000ff);
+      color = this.color;
       material = new THREE.MeshBasicMaterial({
-        color: color
+        color: color,
+        side: THREE.DoubleSide
       });
-      ball = new THREE.Mesh(geom, material);
+      ball = new THREE.Mesh(geo.head, material);
+      height = Math.lerp(this.depth, 0, 100, 0, 0.1);
+      ball.position.z = height;
       /*
       		Size of the pin. Values chosen by experimentation.
       */
 
       size = Math.lerp(this.mag, 0, 10, 0.01, 0.05);
-      ball.position.z = size / 2;
       ball.scale.multiplyScalar(size);
       this.add(ball);
+      lineMaterial = new THREE.LineBasicMaterial({
+        color: color,
+        linewidth: 1
+      });
+      line = new THREE.Line(geo.line, lineMaterial);
+      line.scale.z = height || 0.001;
+      this.add(line);
     }
 
     return Pin;
 
-  })(THREE.Object3D);
+  })(Quake);
 
   /*
   Build a new Earth object. Add each of the quakes with each type of marker.
@@ -194,8 +215,7 @@ points to the north pole, and the X axis is orthagonal, pointing East.
 
   for (id in quakes) {
     quake = quakes[id];
-    earth.addMarker(new Quake(id, quake));
-    earth.addMarker(new Pin(quake.lat, quake.lon, quake.mag));
+    earth.addMarker(new Pin(id, quake));
   }
 
   /*

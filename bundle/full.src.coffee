@@ -16,8 +16,7 @@ class window.Earth extends S3age.Extras.Globe
 		S3age.Extras.Globe.call @
 		sphere = new THREE.SphereGeometry @radius, 64, 32
 		map = THREE.ImageUtils.loadTexture "app/textures/earth_day_4096.jpg"
-		color = 0xFFFFFF
-		ground = new THREE.MeshBasicMaterial { map, color }
+		ground = new THREE.MeshBasicMaterial { map }
 		surface = new THREE.Mesh sphere, ground
 		@add surface
 
@@ -48,6 +47,14 @@ class window.Quake extends THREE.Object3D
 		@lat = quake.lat
 		@lon = quake.lon
 		@mag = quake.mag
+		@depth = quake.depth
+
+		Object.defineProperty @, 'color',
+			get: ->
+				hue = Math.lerp quake.mag, 0, 9, 0.5, 0
+				color = new THREE.Color()
+				color.setHSL hue, 0.5, 0.5
+				color
 
 		###
 		Each class gets its own marker, an instance of `THREE.Line`.
@@ -63,9 +70,7 @@ class window.Quake extends THREE.Object3D
 		The color for the wave on the surface of the earth is tied
 		to the magnitude of the earthquake - darker purple is weaker quake.
 		###
-		color = new THREE.Color 0x000000
-		color.setHSL 0.8, 1, Math.lerp @mag, 0, 10, 0, 1
-		material = new THREE.LineBasicMaterial { color }
+		material = new THREE.LineBasicMaterial { color: @color }
 		wave = new THREE.Line circleGeo, material
 		@add wave
 
@@ -106,33 +111,45 @@ class window.Quake extends THREE.Object3D
 One of two marker types we build for this. This is a ball at the end
 of a tube, to create the quarkboard Pin concept.
 ###
-geom = new THREE.SphereGeometry 1, 20, 20
+geo =
+	head: new THREE.CircleGeometry 1, 64
+	line: do ->
+		g = new THREE.Geometry()
+		g.vertices.push new THREE.Vector3()
+		g.vertices.push new THREE.Vector3(0, 0, 1)
+		g
 
-class window.Pin extends THREE.Object3D
-	constructor: (@lat, @lon, @mag)->
-		super()
+class window.Pin extends Quake
+	constructor: (id, quake)->
+		Quake.apply @, [].slice.call arguments, 0
 		###
 		Color is some value between black and blue. Bluer is stronger quake.
 		###
-		color = Math.lerp @mag, 0, 10, 0x000000, 0x0000ff
-		material = new THREE.MeshBasicMaterial { color }
-		ball = new THREE.Mesh geom, material
+		color = @color
+		material = new THREE.MeshBasicMaterial { color, side: THREE.DoubleSide }
+		ball = new THREE.Mesh geo.head, material
+
+		height = Math.lerp @depth, 0, 100, 0, 0.1
+		ball.position.z = height
 
 		###
 		Size of the pin. Values chosen by experimentation.
 		###
 		size = Math.lerp @mag, 0, 10, 0.01, 0.05
-		ball.position.z = size / 2
 		ball.scale.multiplyScalar size
 		@add ball
+
+		lineMaterial = new THREE.LineBasicMaterial {color, linewidth: 1}
+		line = new THREE.Line(geo.line, lineMaterial)
+		line.scale.z = height || 0.001
+		@add line
 
 ###
 Build a new Earth object. Add each of the quakes with each type of marker.
 ###
 earth = new Earth()
 for id, quake of quakes
-	earth.addMarker new Quake id, quake 
-	earth.addMarker new Pin quake.lat, quake.lon, quake.mag
+	earth.addMarker new Pin id, quake
 
 ###
 A S3age manages a variety of details of the 3D scene. In this case,
