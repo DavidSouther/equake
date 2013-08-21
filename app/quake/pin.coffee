@@ -13,7 +13,7 @@ geo =
 		g
 
 class window.Pin extends Quake
-	constructor: (id, quake)->
+	constructor: (quake)->
 		Quake.apply @, [].slice.call arguments, 0
 		###
 		Color is some value between black and blue. Bluer is stronger quake.
