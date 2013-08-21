@@ -3,8 +3,7 @@ Build a new Earth object. Add each of the quakes with each type of marker.
 ###
 earth = new Earth()
 for id, quake of quakes
-	earth.addMarker new Quake id, quake 
-	earth.addMarker new Pin quake.lat, quake.lon, quake.mag
+	earth.addMarker new Pin id, quake
 
 ###
 A S3age manages a variety of details of the 3D scene. In this case,

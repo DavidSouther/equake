@@ -25,6 +25,14 @@ class window.Quake extends THREE.Object3D
 		@lat = quake.lat
 		@lon = quake.lon
 		@mag = quake.mag
+		@depth = quake.depth
+
+		Object.defineProperty @, 'color',
+			get: ->
+				hue = Math.lerp quake.mag, 0, 9, 0.5, 0
+				color = new THREE.Color()
+				color.setHSL hue, 0.5, 0.5
+				color
 
 		###
 		Each class gets its own marker, an instance of `THREE.Line`.
@@ -40,9 +48,7 @@ class window.Quake extends THREE.Object3D
 		The color for the wave on the surface of the earth is tied
 		to the magnitude of the earthquake - darker purple is weaker quake.
 		###
-		color = new THREE.Color 0x000000
-		color.setHSL 0.8, 1, Math.lerp @mag, 0, 10, 0, 1
-		material = new THREE.LineBasicMaterial { color }
+		material = new THREE.LineBasicMaterial { color: @color }
 		wave = new THREE.Line circleGeo, material
 		@add wave
 

@@ -15,7 +15,7 @@ class window.Earth extends S3age.Extras.Globe
 	constructor: ->
 		S3age.Extras.Globe.call @
 		sphere = new THREE.SphereGeometry @radius, 64, 32
-		map = THREE.ImageUtils.loadTexture "app/textures/earth_day_4096.jpg"
+		map = THREE.ImageUtils.loadTexture "app/quake/textures/earth_day_4096.jpg"
 		ground = new THREE.MeshBasicMaterial { map }
 		surface = new THREE.Mesh sphere, ground
 		@add surface
