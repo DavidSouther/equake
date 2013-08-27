@@ -1,9 +1,9 @@
-# [equake][http://equake.souther.co]
+# [equake](http://equake.souther.co)
 
 
-* Riley Davis *
+**Riley Davis**
 
-The idea behind this project was the xkcd comic [http://xkcd.com/723/].
+The idea behind this project was the xkcd comic http://xkcd.com/723/.
 
 I really like to make complex or large-scale scientific knowledge 
 more accessbile by tying it to scales that people already understand.
@@ -14,7 +14,7 @@ be used to map out tweets (or any other geographic data) if there was another
 earthquake in the US, or anywhere in the world.
 
 
-* David Souther *
+**David Souther**
 
 We really wanted to have the physicallity of the spinning globe that I remember fondly from childhood, while adding
 the dynamicism of a quick scripts. To implement this, we were able to use and build a few tools.
@@ -31,7 +31,7 @@ The rendering is handled by S3age - the equake app only handles creating the 3d 
 
 We built the S3age globe class at the same time. Having a library that can easily and quickly orient along the sufave of the globe will be  a boon in future visualizations we make.
 
-### Code
+## Code
 
 **[index](index.html)**
 
