@@ -1,0 +1,35 @@
+html {
+  height: 100%;
+}
+body {
+  color: #ffffff;
+  font-family: Monospace;
+  font-size: 13px;
+  text-align: center;
+  font-weight: bold;
+  background-color: #000000;
+  margin: 0px;
+  overflow: hidden;
+  height: 100%;
+}
+body #info {
+  color: #fff;
+  position: absolute;
+  top: 0px;
+  width: 50%;
+  margin: 0 auto;
+  padding: 5px;
+  z-index: 100;
+  background-color: rgba(120, 120, 120, 0.8);
+}
+body #stats {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+body #container {
+  max-width: 1280px;
+  height: 828px;
+  background: url("https://s3.amazonaws.com/equake/milky_way.png");
+  margin: 1em auto -828px;
+}
