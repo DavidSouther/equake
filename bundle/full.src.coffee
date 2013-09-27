@@ -16,7 +16,8 @@ class window.Earth extends S3age.Extras.Globe
 		S3age.Extras.Globe.call @
 		sphere = new THREE.SphereGeometry @radius, 64, 32
 		map = THREE.ImageUtils.loadTexture "app/textures/earth_day_4096.jpg"
-		ground = new THREE.MeshBasicMaterial { map }
+		color = 0xFFFFFF
+		ground = new THREE.MeshBasicMaterial { map, color }
 		surface = new THREE.Mesh sphere, ground
 		@add surface
 
@@ -138,8 +139,10 @@ A S3age manages a variety of details of the 3D scene. In this case,
 some ambient light, the Earth with Quakes, and a Sphere control.
 ###
 new S3age "#container",
+	camera: position: [-3, 3, 4], lookAt: [0, 0, 0]
 	scene:
 		lights: [ new THREE.AmbientLight 0xdddddd ]
 		children: [ earth ]
 	controls: THREE.OrbitControls
-
+	testing: true
+	expose: true

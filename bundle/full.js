@@ -23,12 +23,14 @@ points to the north pole, and the X axis is orthagonal, pointing East.
 
 
     function Earth() {
-      var ground, map, sphere, surface;
+      var color, ground, map, sphere, surface;
       S3age.Extras.Globe.call(this);
       sphere = new THREE.SphereGeometry(this.radius, 64, 32);
       map = THREE.ImageUtils.loadTexture("app/textures/earth_day_4096.jpg");
+      color = 0xFFFFFF;
       ground = new THREE.MeshBasicMaterial({
-        map: map
+        map: map,
+        color: color
       });
       surface = new THREE.Mesh(sphere, ground);
       this.add(surface);
@@ -203,11 +205,17 @@ points to the north pole, and the X axis is orthagonal, pointing East.
 
 
   new S3age("#container", {
+    camera: {
+      position: [-3, 3, 4],
+      lookAt: [0, 0, 0]
+    },
     scene: {
       lights: [new THREE.AmbientLight(0xdddddd)],
       children: [earth]
     },
-    controls: THREE.OrbitControls
+    controls: THREE.OrbitControls,
+    testing: true,
+    expose: true
   });
 
 }).call(this);
