@@ -16,11 +16,17 @@ module.exports = (grunt)->
 			vendor:
 				files: "bundle/vendor.js": [
 					"bower_components/s3age/lib/s3age.js"
-					"bower_components/s3age/lib/s3age.controls.js"
+					# "bower_components/s3age/lib/s3age.controls.js"
 					"bower_components/s3age/lib/s3age.extras.js"
+					"app/vendor/orbitcontrols.js"
 				]
+		watch:
+			app:
+				files: [ 'app/*.coffee' ]
+				tasks: [ 'default']
 
 	grunt.loadNpmTasks "grunt-contrib-coffee"
 	grunt.loadNpmTasks "grunt-contrib-uglify"
+	grunt.loadNpmTasks "grunt-contrib-watch"
 
 	grunt.registerTask "default", ["coffee:bundle", "uglify:vendor"]

@@ -14,4 +14,5 @@ new S3age "#container",
 	scene:
 		lights: [ new THREE.AmbientLight 0xdddddd ]
 		children: [ earth ]
-	controls: S3age.Controls.Sphere
+	controls: THREE.OrbitControls
+

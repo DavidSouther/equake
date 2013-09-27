@@ -207,7 +207,7 @@ points to the north pole, and the X axis is orthagonal, pointing East.
       lights: [new THREE.AmbientLight(0xdddddd)],
       children: [earth]
     },
-    controls: S3age.Controls.Sphere
+    controls: THREE.OrbitControls
   });
 
 }).call(this);
